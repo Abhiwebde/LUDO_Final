@@ -485,3 +485,93 @@ class Ludo_Game:
             print("Force Stop Error in Prediction")
 
 #------------------------------------end of step7
+
+#------------------------------------step8
+
+    def Instructional_Button(self,color_indicator,Permanent_Dice_num, Predict_BlockValue):
+        Robo_Operator = None
+        if color_indicator == "red":
+            Temp_CoinPosition = self.Position_Red_coin
+        elif color_indicator == "green":
+            Temp_CoinPosition = self.Position_Green_coin
+        elif color_indicator == "yellow":
+            Temp_CoinPosition = self.Position_Yellow_coin
+        else:
+            Temp_CoinPosition = self.Position_Blue_coin
+
+        all_in = 1
+        for i in range(4):
+            if Temp_CoinPosition[i] == -1:
+                all_in = 1
+            else:
+                all_in = 0
+                break
+
+        if  Permanent_Dice_num == 6:
+            self.Six_Counter += 1
+        else:
+            self.Six_Counter = 0
+
+        if ((all_in == 1 and Permanent_Dice_num == 6) or (all_in==0)) and self.Six_Counter<3:
+            permission = 1
+            if color_indicator == "red":
+                temp = self.Red_coord
+            elif color_indicator == "green":
+                temp = self.Green_coord
+            elif color_indicator == "yellow":
+                temp = self.Yellow_coord
+            else:
+                temp = self.Blue_coord
+
+            if  Permanent_Dice_num<6:
+                if self.Six_overlap == 1:
+                    self.time_for-=1
+                    self.Six_overlap=0
+                for i in range(4):
+                    if  temp[i] == -1:
+                        permission=0
+                    elif temp[i]>100:
+                        if  temp[i] + Permanent_Dice_num <=106:
+                            permission=1
+                            break
+                        else:
+                            permission=0
+                    else:
+                        permission=1
+                        break
+            else:
+                for i in range(4):
+                    if  temp[i]>100:
+                        if  temp[i] + Permanent_Dice_num <= 106:
+                            permission = 1
+                            break
+                        else:
+                            permission = 0
+                    else:
+                        permission = 1
+                        break
+            if permission == 0:
+                self.Command_Maker(None)
+            else:
+                self.State_controller_Button(Predict_BlockValue[2])
+
+                if self.Robo == 1 and Predict_BlockValue == self.Predict_BlockValue[0]:
+                    Robo_Operator = "give"
+                Predict_BlockValue[1]['state'] = DISABLED# Predict btn deactivation
+
+        else:
+            Predict_BlockValue[1]['state'] = NORMAL# Predict btn activation
+            if self.Six_overlap == 1:
+                self.time_for -= 1
+                self.Six_overlap = 0
+            self.Command_Maker()
+
+        if  Permanent_Dice_num == 6 and self.Six_Counter<3 and Predict_BlockValue[2][0]['state'] == NORMAL:
+            self.time_for-=1
+        else:
+            self.Six_Counter=0
+
+        if self.Robo == 1 and Robo_Operator:
+            self.Robo_Judge(Robo_Operator)
+
+#-------------------------------------end of step8
