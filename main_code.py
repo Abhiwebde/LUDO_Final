@@ -662,3 +662,86 @@ class Ludo_Game:
         self.Instructional_Button_Store(Block_Predict_Yellow, Predict_Yellow, [btn_1,btn_2,btn_3,btn_4])
 
 #----------------------------------end of step12
+
+#---------------------------------step13
+
+    def Instructional_Button_Green(self):
+        Block_Predict_Green = Label(self.make_board, image=self.Dice_side[0])
+        Block_Predict_Green.place(x=100+(40*6+40*3+40*6+10)+20, y=15)
+        Predict_Green = Button(self.make_board, bg="black", fg="green", relief=RAISED, bd=5, text="Predict", font=("Times new roman", 8, "bold"), command=lambda: self.Prediction_Maker("green"))
+        Predict_Green.place(x=100+(40*6+40*3+40*6+2)+20, y=15 + 50)
+        
+        btn_1 = Button(self.make_board,bg="#262626",fg="#00eb00",text="1",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("green",'1'), state=DISABLED, disabledforeground="red")
+        btn_1.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15,y=15+100)
+        btn_2 = Button(self.make_board,bg="#262626",fg="#00eb00",text="2",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("green",'2'), state=DISABLED, disabledforeground="red")
+        btn_2.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15 + 40,y=15+100)
+        btn_3 = Button(self.make_board,bg="#262626",fg="#00eb00",text="3",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("green",'3'), state=DISABLED, disabledforeground="red")
+        btn_3.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15,y=15+100+40)
+        btn_4 = Button(self.make_board,bg="#262626",fg="#00eb00",text="4",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("green",'4'), state=DISABLED, disabledforeground="red")
+        btn_4.place(x=100 + (40 * 6 + 40 * 3 + 40 * 6 + 2)+15 + 40,y=15+100+40)
+        
+        Label(self.make_board, text="Player 4", bg="#141414", fg="gold", font=("Times new roman", 15, "bold")).place(x=100+(40*6+40*3+40*6+7), y=15+140+50)
+        self.Instructional_Button_Store(Block_Predict_Green, Predict_Green, [btn_1,btn_2,btn_3,btn_4])
+
+
+    def Instructional_Button_Store(self, Block_Indicator, Predictor, Entry_Controller):
+        temp = []
+        temp.append(Block_Indicator)
+        temp.append(Predictor)
+        temp.append(Entry_Controller)
+        self.Predict_BlockValue.append(temp)
+
+
+    def Start_position_RedCircle(self, Coin_num):
+        self.make_board.delete(self.Red_coin[int(Coin_num)-1])
+        self.Red_coin[int(Coin_num)-1] = self.make_board.create_oval(100 + 40, 15+(40*6), 100 +40 + 40, 15+(40*6)+40, fill="red", width=3, outline="black")
+
+        self.Red_label[int(Coin_num)-1].place_forget()
+        Red_label_X = 100 + 40 + 10
+        Red_label_Y = 15 + (40 * 6) + 5
+        self.Red_label[int(Coin_num)-1].place(x=Red_label_X, y=Red_label_Y)
+
+        self.Position_Red_coin[int(Coin_num)-1] = 1
+        self.window.update()
+        time.sleep(0.2)
+
+    def Start_position_BlueCircle(self,Coin_num):
+        self.make_board.delete(self.Blue_coin[int(Coin_num)-1])
+        self.Blue_coin[int(Coin_num)-1] = self.make_board.create_oval(100+240,340+(40*5)-5,100+240+40,340+(40*6)-5,fill="blue",width=3)
+
+        self.Blue_label[int(Coin_num)-1].place_forget()
+        Blue_label_X = 100+240 + 10
+        Blue_label_Y = 340+(40*5)-5 + 5
+        self.Blue_label[int(Coin_num) - 1].place(x=Blue_label_X, y=Blue_label_Y)
+
+        self.Position_Blue_coin[int(Coin_num) - 1] = 40
+        self.window.update()
+        time.sleep(0.2)
+    
+    def Start_position_GreenCircle(self,Coin_num):
+        self.make_board.delete(self.Green_coin[int(Coin_num)-1])
+        self.Green_coin[int(Coin_num)-1] = self.make_board.create_oval(100 + (40*8), 15 + 40, 100 +(40*9), 15 + 40+ 40, fill="green", width=3)
+
+        self.Green_label[int(Coin_num)-1].place_forget()
+        Green_label_X = 100 + (40*8) + 10
+        Green_label_Y = 15 + 40 + 5
+        self.Green_label[int(Coin_num)-1].place(x=Green_label_X, y=Green_label_Y)
+
+        self.Position_Green_coin[int(Coin_num)-1] = 14
+        self.window.update()
+        time.sleep(0.2)
+
+    def Start_position_YellowCircle(self,Coin_num):
+        self.make_board.delete(self.Yellow_coin[int(Coin_num)-1])
+        self.Yellow_coin[int(Coin_num)-1] = self.make_board.create_oval(100 + (40 * 6)+(40*3)+(40*4), 15 + (40*8), 100 + (40 * 6)+(40*3)+(40*5), 15 + (40*9), fill="yellow", width=3)
+
+        self.Yellow_label[int(Coin_num)-1].place_forget()
+        Yellow_label_X = 100 + (40 * 6)+(40*3)+(40*4) + 10
+        Yellow_label_Y = 15 + (40*8) + 5
+        self.Yellow_label[int(Coin_num) - 1].place(x=Yellow_label_X, y=Yellow_label_Y)
+
+        self.Position_Yellow_coin[int(Coin_num) - 1] = 27
+        self.window.update()
+        time.sleep(0.2)
+
+#-------------------------------------end of step13
