@@ -955,4 +955,104 @@ class Ludo_Game:
 
 #-------------------------------------------end of step14
 
+#-------------------------------------------step15
+
+    def Coin_Motion(self,Coin_Counter,Specific_Coin,num_label,num_label_X ,num_label_Y,Coin_Color, Path_Counter):
+        try:
+            num_label.place(x=num_label_X,y=num_label_Y)
+            while True:
+                if Path_Counter == 0:
+                    break
+                elif (Coin_Counter == 51 and Coin_Color == "red") or (Coin_Counter==12 and Coin_Color == "green") or (Coin_Counter == 25 and Coin_Color == "yellow") or (Coin_Counter == 38 and Coin_Color == "blue") or Coin_Counter>=100:
+                    if Coin_Counter<100:
+                        Coin_Counter=100
+
+                    Coin_Counter = self.Traversal_Control(Specific_Coin, num_label, num_label_X, num_label_Y, Path_Counter, Coin_Counter, Coin_Color)
+
+                    if  Coin_Counter == 106:
+                        
+                        if self.Robo == 1 and Coin_Color == "red":
+                            messagebox.showinfo("Destination reached","Hey! I am at the destination")
+                        else:
+                            messagebox.showinfo("Destination reached","Congrats! You now at the destination")
+                        if Path_Counter == 6:
+                            self.Six_overlap = 1
+                        else:
+                            self.time_for -= 1
+                    break
+
+                Coin_Counter += 1
+                Path_Counter -=1
+                num_label.place_forget()
+
+                print(Coin_Counter)
+
+                if Coin_Counter<=5:
+                    self.make_board.move(Specific_Coin, 40, 0)
+                    num_label_X+=40
+                elif Coin_Counter == 6:
+                    self.make_board.move(Specific_Coin, 40, -40)
+                    num_label_X += 40
+                    num_label_Y-=40
+                elif 6< Coin_Counter <=11:
+                    self.make_board.move(Specific_Coin, 0, -40)
+                    num_label_Y -= 40
+                elif Coin_Counter <=13:
+                    self.make_board.move(Specific_Coin, 40, 0)
+                    num_label_X += 40
+                elif Coin_Counter <=18:
+                    self.make_board.move(Specific_Coin, 0, 40)
+                    num_label_Y += 40
+                elif Coin_Counter == 19:
+                    self.make_board.move(Specific_Coin, 40, 40)
+                    num_label_X += 40
+                    num_label_Y += 40
+                elif Coin_Counter <=24:
+                    self.make_board.move(Specific_Coin, 40, 0)
+                    num_label_X += 40
+                elif Coin_Counter <=26:
+                    self.make_board.move(Specific_Coin, 0, 40)
+                    num_label_Y += 40
+                elif Coin_Counter <=31:
+                    self.make_board.move(Specific_Coin, -40, 0)
+                    num_label_X -= 40
+                elif Coin_Counter == 32:
+                    self.make_board.move(Specific_Coin, -40, 40)
+                    num_label_X -= 40
+                    num_label_Y += 40
+                elif Coin_Counter <= 37:
+                    self.make_board.move(Specific_Coin, 0, 40)
+                    num_label_Y += 40
+                elif Coin_Counter <= 39:
+                    self.make_board.move(Specific_Coin, -40, 0)
+                    num_label_X -= 40
+                elif Coin_Counter <= 44:
+                    self.make_board.move(Specific_Coin, 0, -40)
+                    num_label_Y -= 40
+                elif Coin_Counter == 45:
+                    self.make_board.move(Specific_Coin, -40, -40)
+                    num_label_X -= 40
+                    num_label_Y -= 40
+                elif Coin_Counter <= 50:
+                    self.make_board.move(Specific_Coin, -40, 0)
+                    num_label_X -= 40
+                elif 50< Coin_Counter <=52:
+                    self.make_board.move(Specific_Coin, 0, -40)
+                    num_label_Y -= 40
+                elif Coin_Counter == 53:
+                    self.make_board.move(Specific_Coin, 40, 0)
+                    num_label_X += 40
+                    Coin_Counter = 1
+
+                num_label.place_forget()
+                num_label.place(x=num_label_X, y=num_label_Y)
+
+                self.window.update()
+                time.sleep(0.2)
+
+            return Coin_Counter
+        except:
+            print("Force Stop Error Came in motion of coin")
+
+#-------------------------------------end of step15
 
