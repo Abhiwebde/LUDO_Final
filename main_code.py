@@ -619,3 +619,24 @@ class Ludo_Game:
 
 #-------------------------------------end of step10
 
+#--------------------------------------step11
+
+    def Instructional_Button_Blue(self):
+        Block_Predict_Blue = Label(self.make_board, image=self.Dice_side[0])
+        Block_Predict_Blue.place(x=34, y=15+(40*6+40*3)+10)
+        Predict_Blue = Button(self.make_board, bg="black", fg="green", relief=RAISED, bd=5, text="Predict",font=("Times new roman", 8, "bold"), command=lambda: self.Prediction_Maker("blue"))
+        Predict_Blue.place(x=25, y=15+(40*6+40*3)+40 + 20)
+
+        btn_1 = Button(self.make_board,bg="#262626",fg="#00eb00",text="1",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("blue",'1'), state=DISABLED, disabledforeground="red")
+        btn_1.place(x=20,y=15+(40*6+40*3)+40 + 70)
+        btn_2 = Button(self.make_board,bg="#262626",fg="#00eb00",text="2",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("blue",'2'), state=DISABLED, disabledforeground="red")
+        btn_2.place(x=60,y=15+(40*6+40*3)+40 + 70)
+        btn_3 = Button(self.make_board,bg="#262626",fg="#00eb00",text="3",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("blue",'3'), state=DISABLED, disabledforeground="red")
+        btn_3.place(x=20,y=15+(40*6+40*3)+40 + 70+ 40)
+        btn_4 = Button(self.make_board,bg="#262626",fg="#00eb00",text="4",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("blue",'4'), state=DISABLED, disabledforeground="red")
+        btn_4.place(x=60,y=15+(40*6+40*3)+40 + 70+ 40)
+
+        Label(self.make_board, text="Player 2", bg="#141414", fg="gold", font=("Times new roman", 15, "bold")).place(x=12,y=15+(40*6+40*3)+40 + 110+50)
+        self.Instructional_Button_Store(Block_Predict_Blue, Predict_Blue, [btn_1,btn_2,btn_3,btn_4])
+
+#-------------------------------------end of step11
