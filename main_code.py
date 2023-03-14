@@ -430,3 +430,58 @@ class Ludo_Game:
 
 #----------------------------------------end of step6
 
+#<-----------------------step7
+
+    # Get block value after prediction based on probability
+    def Prediction_Maker(self,color_indicator):
+        try:
+            if color_indicator == "red":
+                Predict_BlockValue = self.Predict_BlockValue[0]
+                if self.Robo and self.count_RoboStage < 3:
+                    self.count_RoboStage += 1
+                if self.Robo and self.count_RoboStage == 3 and self.Six_Counter < 2:
+                    Permanent_Dice_num = self.move_Red = 6
+                    self.count_RoboStage += 1
+                else:    
+                    Permanent_Dice_num = self.move_Red = randint(1, 6)
+
+            elif color_indicator == "blue":
+                Predict_BlockValue = self.Predict_BlockValue[1]
+                Permanent_Dice_num = self.move_Blue = randint(1, 6)
+                if self.Robo and Permanent_Dice_num == 6:
+                    for coin_loc in self.Position_Red_coin:
+                        if coin_loc>=40 and coin_loc<=46:
+                            Permanent_Dice_num = self.move_Blue = randint(1, 5)
+                            break
+                            
+            elif color_indicator == "yellow":
+                Predict_BlockValue = self.Predict_BlockValue[2]
+                Permanent_Dice_num = self.move_Yellow = randint(1, 6)
+
+            else:
+                Predict_BlockValue = self.Predict_BlockValue[3]
+                Permanent_Dice_num = self.move_Green = randint(1, 6)
+
+            Predict_BlockValue[1]['state'] = DISABLED
+
+            # Illusion of coin floating
+            Temp_Counter = 12
+            while Temp_Counter>0:
+                move_Temp_Counter = randint(1, 6)
+                Predict_BlockValue[0]['image'] = self.Dice_side[move_Temp_Counter - 1]
+                self.window.update()
+                time.sleep(0.1)
+                Temp_Counter-=1
+
+            print("Prediction result: ", Permanent_Dice_num)
+
+            # Permanent predicted value containing image set
+            Predict_BlockValue[0]['image'] = self.Dice_side[Permanent_Dice_num-1]
+            if self.Robo == 1 and color_indicator == "red":
+                self.window.update()
+                time.sleep(0.4)
+            self.Instructional_Button(color_indicator,Permanent_Dice_num,Predict_BlockValue)
+        except:
+            print("Force Stop Error in Prediction")
+
+#------------------------------------end of step7
