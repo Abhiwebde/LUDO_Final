@@ -1304,3 +1304,220 @@ class Ludo_Game:
         return True
 
 #-----------------------------end of step18
+
+#-----------------------------step19
+
+    def Robo_Judge(self, ind="give"):
+        if ind == "give":# For give the value
+            all_in = 1# Denoting all the coins are present in the room
+            for i in range(4):
+                if self.Position_Red_coin[i] == -1:
+                    all_in = 1
+                else:
+                    all_in = 0# Denoting all the coins not present in the room
+                    break
+            
+            if all_in == 1:# All coins are present in room
+                if self.move_Red == 6:
+                    predicted_coin = choice([1,2,3,4])
+                    self.Store_Robo.append(predicted_coin)
+                    self.Main_Controller("red", predicted_coin)
+                else:
+                    pass
+            else:# All coins not present in room
+                temp = self.Position_Red_coin# Take red coin position reference
+                take_ref = self.Position_Blue_coin# Take blue coin position reference
+                
+                if len(self.Store_Robo) == 1:# When only one coin is outside of the room
+                    if self.move_Red<6:# When prediction less than 6
+                        if (self.count_robo_stage_from_start>3) and (temp[self.Store_Robo[0]-1] >=33 and temp[self.Store_Robo[0]-1]<=38):
+                            self.count_robo_stage_from_start = 2
+                        self.Main_Controller("red", self.Store_Robo[0]) 
+                    else:# When prediction is 6
+                        forward_perm = 0# Controlling process to be forward or not
+                        for coin in take_ref:# coin is blue individual coin distance
+                            if coin>-1 and coin<101:
+                                if (coin != 40 or coin != 35 or coin != 27 or coin != 22 or coin != 14 or coin != 9 or coin !=1 or coin !=48) and coin-temp[self.Store_Robo[0]-1] >= 6 and coin-temp[self.Store_Robo[0]-1] <= 12:
+                                    forward_perm = 1
+                                    break
+                                else:
+                                    forward_perm = 0
+                            else:
+                                forward_perm = 0
+
+                        if forward_perm == 0:# Not forward the process
+                            store = [1,2,3,4]
+                            store.remove(self.Store_Robo[0])
+                            predicted_coin = choice(store)
+                            self.Store_Robo.append(predicted_coin)
+                            self.Main_Controller("red", predicted_coin)
+                        else:# Forward the entire process
+                            self.Main_Controller("red", self.Store_Robo[0])
+                else:
+                    def Normal_Movement_asper_Condition():
+                        # This portion is for checking if current location + predicted value <= 106 or not.....Coin Filtering
+                        Normal_Movement = 1# Normal Movement of the entite coin
+                        
+                        for coin in self.Store_Robo:# coin is coin number
+                            if temp[coin-1]+self.move_Red <= 106:# For all coins having predicted location <=106
+                                pass
+                            else:
+                                Normal_Movement = 0
+                                break
+
+                        if Normal_Movement:
+                            temp_Store_Robo = [coin for coin in self.Store_Robo]
+                        else:
+                            temp_Store_Robo = [coin for coin in self.Store_Robo if temp[coin-1]+self.move_Red <= 106]
+
+                        # This portion is for coin filtering under some constrains
+                        for coin in temp_Store_Robo:# coin is coin number
+                            if len(temp_Store_Robo)>1 and temp[coin-1]<101: # See Diagram under help to unserstand to understand the location                            
+                                if (temp[coin-1] in take_ref) and (temp[coin-1] != 1 or temp[coin-1] != 9 or temp[coin-1] != 14 or temp[coin-1] != 22 or temp[coin-1] != 27 or temp[coin-1] != 35 or temp[coin-1] != 40 or temp[coin-1] != 48):
+                                    temp_Store_Robo.remove(coin)
+                                elif temp[coin-1]<=39 and temp[coin-1]+self.move_Red>39:                                    
+                                    for loc_Other_Coin in take_ref:
+                                        if (loc_Other_Coin>=40 and loc_Other_Coin<=46) and (temp[coin-1]+self.move_Red>loc_Other_Coin):
+                                            temp_Store_Robo.remove(coin)
+                                            break
+
+                        # Overlapp checking with predicted value to eliminate other coin
+                        Forward_Process = 1
+                        for coin in temp_Store_Robo:
+                            if temp[coin-1]+self.move_Red in take_ref:
+                                Forward_Process = 0
+                                self.Main_Controller("red", coin)
+                                break
+                        
+                        # Not a single overlapp found so now self rescue or safe forward
+                        if Forward_Process:
+                            take_len = len(temp_Store_Robo)
+                            store = {}
+                            if take_ref:
+                                for robo in temp_Store_Robo:#  robo is coin number
+                                    for Other_Coin in take_ref:# Other_Coin is blue coin location
+                                        if Other_Coin>-1 and Other_Coin<100:
+                                            if take_len>1 and (temp[robo-1]>38 and Other_Coin<=38) or ((temp[robo-1] == 9 or temp[robo-1] == 14 or temp[robo-1] == 27 or temp[robo-1] == 35 or temp[robo-1] == 40 or temp[robo-1] == 48 or temp[robo-1] == 22) and (Other_Coin<=temp[robo-1] or (Other_Coin>temp[robo-1] and Other_Coin<=temp[robo-1]+3))):  # avoid case to store
+                                                take_len-=1
+                                            else:
+                                                store[temp[robo-1]-Other_Coin] = (robo, take_ref.index(Other_Coin)+1)# Store coin number
+                            
+                            # positive_distance = robo front          negative_distance = robo_behind
+                            if store:
+                                Positive_Distance = {}
+                                Negative_Distance = {}
+                                Take_Max = 0
+                                Take_Min = 0
+                                
+                                try:
+                                    Positive_Distance = dict((k,v) for k,v in store.items() if k>0)
+                                    Take_Min = min(Positive_Distance.items())
+                                except:
+                                    pass
+                                try:
+                                    Negative_Distance = dict((k,v) for k,v in store.items() if k<0)
+                                    Take_Max = max(Negative_Distance.items())
+                                except:
+                                    pass
+                                
+                                # Positive forward checking
+                                Comp_Work_pos = 0
+                                take_len = len(Positive_Distance)
+                                index_from_last = -1
+
+                                while take_len:
+                                    if Take_Min and Take_Min[0] <= 6:
+                        
+                                        Comp_Work_pos = 1
+                                        self.Main_Controller("red", Take_Min[1][0])
+                                        break
+                                    else:
+                                        index_from_last -= 1
+                                        try:
+                                            Take_Min = min(sorted(Positive_Distance.items())[index_from_last])
+                                        except:
+                                            break
+                                    take_len -= 1
+
+
+                                # Negative forward checking
+                                Comp_Work_neg = 0
+                                if not Comp_Work_pos:
+                                    take_len = len(Negative_Distance)
+                                    index_from_last = len(Negative_Distance)-1
+                                    while take_len:
+                                        if Take_Max and temp[Take_Max[1][0]-1] + self.move_Red <= take_ref[Take_Max[1][1]-1]:
+                                            Comp_Work_neg = 1
+                                            self.Main_Controller("red", Take_Max[1][0])
+                                            break
+                                        else:
+                                            index_from_last -= 1
+                                            try:
+                                                Take_Max = max(sorted(Negative_Distance.items())[index_from_last])
+                                            except:
+                                                break
+                                        take_len -= 1
+                        
+                                # Not operate in positive and negative distance method...So now cover it by closest distance to the destination
+                                if not Comp_Work_neg and not Comp_Work_pos:
+                                    Close_Destination = temp_Store_Robo[0]
+                                    for coin_index in range(1,len(temp_Store_Robo)):
+                                        if temp[temp_Store_Robo[coin_index]-1] > temp[Close_Destination-1]:
+                                            Close_Destination = temp_Store_Robo[coin_index]
+                        
+                                    self.Main_Controller("red", Close_Destination)
+                            else:# If store(Not find the location difference) is empty
+                                Close_Destination = temp_Store_Robo[0]
+                                for coin_index in range(1,len(temp_Store_Robo)):
+                                    if temp[temp_Store_Robo[coin_index]-1] > temp[Close_Destination-1]:
+                                        Close_Destination = temp_Store_Robo[coin_index]
+                                self.Main_Controller("red", Close_Destination)
+                        else:
+                            pass
+                        
+                    # For multiple Coin control Giving
+                    if self.move_Red<6:
+                        Normal_Movement_asper_Condition()
+                    else:
+                        Coin_Proceed = 0
+                        
+                        for coin in self.Store_Robo:
+                            if temp[coin-1] + self.move_Red in self.Position_Blue_coin:
+                                Coin_Proceed = coin
+                                break
+
+                        if not Coin_Proceed:
+                            if -1 in self.Position_Red_coin:
+                                # Coin out
+                                Temp_store = [1,2,3,4]
+                                for coin in self.Store_Robo:
+                                    Temp_store.remove(coin)
+                                take_pred = choice(Temp_store)
+                                self.Store_Robo.append(take_pred)
+                                self.Main_Controller("red", take_pred)
+                            else:
+                                # coin proceed
+                                Normal_Movement_asper_Condition()
+                        else:
+                            self.Main_Controller("red", Coin_Proceed)
+        else:
+            self.Prediction_Maker("red")# Prediction Function Call
+
+
+if __name__ == '__main__':
+    window = Tk()
+    window.geometry("800x630")
+    window.maxsize(800,630)
+    window.minsize(800,630)
+    window.title("LUDO Game by DataFlair")
+    window.iconbitmap("C:\\Users\\DELL\\Desktop\\DataFlair\\ludo_icon.ico")
+    block_six_side = ImageTk.PhotoImage(Image.open("dice1.jpg.webp").resize((33, 33), Image.ANTIALIAS))
+    block_five_side = ImageTk.PhotoImage(Image.open("dice2.jpg").resize((33, 33), Image.ANTIALIAS))
+    block_four_side = ImageTk.PhotoImage(Image.open("dice3.jpg").resize((33, 33), Image.ANTIALIAS))
+    block_three_side = ImageTk.PhotoImage(Image.open("dice4.jpg").resize((33, 33),Image.ANTIALIAS))
+    block_two_side = ImageTk.PhotoImage(Image.open("dice5.jpg").resize((33, 33), Image.ANTIALIAS))
+    block_one_side = ImageTk.PhotoImage(Image.open("dice6.jpg").resize((33, 33), Image.ANTIALIAS))
+    Ludo_Game(window,block_six_side,block_five_side,block_four_side,block_three_side,block_two_side,block_one_side)
+    window.mainloop()
+
+#---------------------------------------end of step19
