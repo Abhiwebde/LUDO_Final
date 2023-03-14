@@ -1055,6 +1055,128 @@ class Ludo_Game:
             print("Force Stop Error Came in motion of coin")
 
 #-------------------------------------end of step15
+#-------------------------------------start of step16
+
+    # For same position, previous coin deleted and set to the room
+    def coord_overlap(self, Coin_Counter, Coin_Color, path_to_traverse_before_overlap):
+        if  Coin_Color!="red":
+            for Coin_num in range(len(self.Red_coord)):
+                if  self.Red_coord[Coin_num] == Coin_Counter:
+                    if path_to_traverse_before_overlap == 6:
+                        self.Six_overlap=1
+                    else:
+                        self.time_for-=1
+
+                    self.make_board.delete(self.Red_coin[Coin_num])
+                    self.Red_label[Coin_num].place_forget()
+                    self.Position_Red_coin[Coin_num] = -1
+                    self.Red_coord[Coin_num] = -1
+                    if self.Robo == 1:
+                        self.Store_Robo.remove(Coin_num+1)
+                        if self.Position_Red_coin.count(-1)>=1:
+                            self.count_robo_stage_from_start = 2
+
+                    if Coin_num == 0:
+                       remade_coin = self.make_board.create_oval(100+40, 15+40, 100+40+40, 15+40+40, width=3, fill="red", outline="black")
+                       self.Red_label[Coin_num].place(x=100 + 40 + 10, y=15 + 40 + 5)
+                    elif Coin_num == 1:
+                        remade_coin = self.make_board.create_oval(100+40+60+60, 15 + 40, 100+40+60+60+40, 15 + 40 + 40, width=3, fill="red", outline="black")
+                        self.Red_label[Coin_num].place(x=100 + 40 + 60 +60 + 10, y=15 + 40 + 5)
+                    elif Coin_num == 2:
+                        remade_coin = self.make_board.create_oval(100 + 40 + 60 + 60, 15 + 40 + 100, 100 + 40 + 60 + 60 + 40, 15 + 40 + 40 + 100, width=3, fill="red", outline="black")
+                        self.Red_label[Coin_num].place(x=100 + 40 + 60 + 60 + 10, y=15 + 40 + 100 + 5)
+                    else:
+                        remade_coin = self.make_board.create_oval(100 + 40, 15 + 40+100, 100 + 40 + 40, 15 + 40 + 40+100, width=3,fill="red", outline="black")
+                        self.Red_label[Coin_num].place(x=100 + 40 + 10, y=15 + 40 + 100 + 5)
+
+                    self.Red_coin[Coin_num]=remade_coin
+
+        if  Coin_Color != "green":
+            for Coin_num in range(len(self.Green_coord)):
+                if  self.Green_coord[Coin_num] == Coin_Counter:
+                    if path_to_traverse_before_overlap == 6:
+                        self.Six_overlap = 1
+                    else:
+                        self.time_for-=1
+
+                    self.make_board.delete(self.Green_coin[Coin_num])
+                    self.Green_label[Coin_num].place_forget()
+                    self.Position_Green_coin[Coin_num] = -1
+                    self.Green_coord[Coin_num] = -1
+
+                    if Coin_num == 0:
+                        remade_coin = self.make_board.create_oval(340+(40*3)+40, 15 + 40, 340+(40*3)+40 + 40, 15 + 40 + 40, width=3, fill="green", outline="black")
+                        self.Green_label[Coin_num].place(x=340 + (40 * 3) + 40 + 10, y=15 + 40 + 5)
+                    elif Coin_num == 1:
+                        remade_coin = self.make_board.create_oval(340+(40*3)+40+ 60 + 40+20, 15 + 40, 340+(40*3)+40 + 60 + 40 + 40+20, 15 + 40 + 40, width=3, fill="green", outline="black")
+                        self.Green_label[Coin_num].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30, y=15 + 40 + 5)
+                    elif Coin_num == 2:
+                        remade_coin = self.make_board.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 15 + 40 + 100, 340 + (40 * 3) + 40 + 60 + 40 + 40 + 20, 15 + 40 + 40 + 100, width=3, fill="green", outline="black")
+                        self.Green_label[Coin_num].place(x=340 + (40 * 3) + 40 + 40 + 60 + 30, y=15 + 40 + 100 + 5)
+                    else:
+                        remade_coin = self.make_board.create_oval(340+(40*3)+40, 15 + 40 + 100, 340+(40*3)+40 + 40, 15 + 40 + 40 + 100, width=3, fill="green", outline="black")
+                        self.Green_label[Coin_num].place(x=340+(40*3) + 40 + 10, y=15 + 40 + 100 + 5)
+
+                    self.Green_coin[Coin_num] = remade_coin
+
+
+        if  Coin_Color != "yellow":
+            for Coin_num in range(len(self.Yellow_coord)):
+                if  self.Yellow_coord[Coin_num] == Coin_Counter:
+                    if path_to_traverse_before_overlap == 6:
+                        self.Six_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_board.delete(self.Yellow_coin[Coin_num])
+                    self.Yellow_label[Coin_num].place_forget()
+                    self.Position_Yellow_coin[Coin_num] = -1
+                    self.Yellow_coord[Coin_num] = -1
+
+                    if Coin_num == 0:
+                        remade_coin = self.make_board.create_oval(340 + (40 * 3) + 40, 340+80+15, 340 + (40 * 3) + 40 + 40, 340+80+40+15, width=3, fill="yellow", outline="black")
+                        self.Yellow_label[Coin_num].place(x=340+(40*3) + 40 + 10, y=30 + (40*6)+(40*3)+40+10)
+                    elif Coin_num == 1:
+                        remade_coin = self.make_board.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 340+80+15, 340 + (40 * 3) + 40 + 60 + 40 + 40+20, 340+80+40+15, width=3, fill="yellow", outline="black")
+                        self.Yellow_label[Coin_num].place(x=340+(40*3)+ 40 + 40+ 60 + 30, y=30 + (40*6)+(40*3)+40+10)
+                    elif Coin_num == 2:
+                        remade_coin = self.make_board.create_oval(340 + (40 * 3) + 40 + 60 + 40 + 20, 340 + 80 + 60 + 40 + 15, 340 + (40 * 3) + 40 + 60 + 40 + 40 + 20, 340 + 80 + 60 + 40 + 40 + 15, width=3, fill="yellow", outline="black")
+                        self.Yellow_label[Coin_num].place(x=340+(40*3)+ 40 + 40+ 60 + 30, y=30 + (40*6)+(40*3)+40+100+10)
+                    else:
+                        remade_coin = self.make_board.create_oval(340 + (40 * 3) + 40, 340+80+60+40+15, 340 + (40 * 3) + 40 + 40,340+80+60+40+40+15, width=3, fill="yellow", outline="black")
+                        self.Yellow_label[Coin_num].place(x=340 + (40 * 3) + 40 + 10, y=30 + (40 * 6) + (40 * 3) + 40 + 100 + 10)
+
+                    self.Yellow_coin[Coin_num] = remade_coin
+
+        if  Coin_Color != "blue":
+            for Coin_num in range(len(self.Blue_coord)):
+                if  self.Blue_coord[Coin_num] == Coin_Counter:
+                    if path_to_traverse_before_overlap == 6:
+                        self.Six_overlap = 1
+                    else:
+                        self.time_for -= 1
+
+                    self.make_board.delete(self.Blue_coin[Coin_num])
+                    self.Blue_label[Coin_num].place_forget()
+                    self.Position_Blue_coin[Coin_num] = -1
+                    self.Blue_coord[Coin_num]=-1
+
+                    if Coin_num == 0:
+                        remade_coin = self.make_board.create_oval(100 + 40, 340+80+15, 100 + 40 + 40, 340+80+40+15, width=3, fill="blue", outline="black")
+                        self.Blue_label[Coin_num].place(x=100+40+10, y=30 + (40*6)+(40*3)+40+10)
+                    elif Coin_num == 1:
+                        remade_coin = self.make_board.create_oval(100 + 40 + 60 + 40+20, 340+80+15, 100 + 40 + 60 + 40 + 40+20, 340+80+40+15, width=3, fill="blue", outline="black")
+                        self.Blue_label[Coin_num].place(x=100 + 40 + 60 +60 + 10, y=30 + (40*6)+(40*3)+40+10)
+                    elif Coin_num == 2:
+                        remade_coin = self.make_board.create_oval(100 + 40 + 60 + 40 + 20, 340 + 80 + 60 + 40 + 15, 100 + 40 + 60 + 40 + 40 + 20, 340 + 80 + 60 + 40 + 40 + 15, width=3, fill="blue", outline="black")
+                        self.Blue_label[Coin_num].place(x=100 + 40 + 60 + 60 + 10, y=30 + (40 * 6) + (40 * 3) + 40 + 60 + 40 + 10)
+                    else:
+                        remade_coin = self.make_board.create_oval( 100 + 40, 340+80+60+40+15, 100 + 40 + 40, 340+80+60+40+40+15, width=3, fill="blue", outline="black")
+                        self.Blue_label[Coin_num].place(x=100+40+10, y=30 + (40*6)+(40*3)+40+60+40+10)
+
+                    self.Blue_coin[Coin_num] = remade_coin
+
+#---------------------------end of step16
 
 #----------------------------step17
 
