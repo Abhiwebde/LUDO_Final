@@ -327,3 +327,25 @@ class Ludo_Game:
         self.Yellow_label.append(Yellow4_label)
 
 #<-------------------------------end of step3----------------------------->
+
+#--------------------------------step4
+    # Total number of players: Control take at first
+    def Initial_Control(self):
+        for i in range(4):
+            self.Predict_BlockValue[i][1]['state'] = DISABLED
+
+        # Make other window to control take
+        Top = Toplevel()
+        Top.geometry("530x300")
+        Top.maxsize(530,300)
+        Top.minsize(530,300)
+        Top.config(bg="white")
+        Top.iconbitmap("C:\\Users\\DELL\\Desktop\\DataFlair\\ludo_icon.ico")
+
+        Head = Label(Top,text="Total number of players",font=("Times new roman",30,"bold","italic"))
+        Head.place(x=50,y=30)
+        Entry_take = Entry(Top,font=("Times new roman",18,"bold","italic"),relief=SUNKEN,bd=5,width=12, state=DISABLED)
+        Entry_take.place(x=130,y=85)
+        Entry_take.focus()
+
+#-----------------------------end of step4
