@@ -327,3 +327,161 @@ class Ludo_Game:
         self.Yellow_label.append(Yellow4_label)
 
 #<-------------------------------end of step3----------------------------->
+
+#--------------------------------step4
+    # Total number of players: Control take at first
+    def Initial_Control(self):
+        for i in range(4):
+            self.Predict_BlockValue[i][1]['state'] = DISABLED
+
+        # Make other window to control take
+        Top = Toplevel()
+        Top.geometry("530x300")
+        Top.maxsize(530,300)
+        Top.minsize(530,300)
+        Top.config(bg="white")
+        Top.iconbitmap("C:\\Users\\DELL\\Desktop\\DataFlair\\ludo_icon.ico")
+
+        Head = Label(Top,text="Total number of players",font=("Times new roman",30,"bold","italic"))
+        Head.place(x=50,y=30)
+        Entry_take = Entry(Top,font=("Times new roman",18,"bold","italic"),relief=SUNKEN,bd=5,width=12, state=DISABLED)
+        Entry_take.place(x=130,y=85)
+        Entry_take.focus()
+
+#-----------------------------end of step4
+
+#-----------------------------step5
+
+        def Filter_value():# Total player input value filtering
+            def input_filter_value(Coin_num):# Input value Filtering
+                try:
+                    return True if (4>=int(Coin_num)>=2) or type(Coin_num) == int else False
+                except:
+                    return False
+
+            take_Response = input_filter_value(Entry_take.get())
+            if take_Response:
+                for player_index in range(int(Entry_take.get())):
+                    self.Total_player.append(player_index)
+                print(self.Total_player)
+                self.Command_Maker()
+                Top.destroy()
+            else:
+                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
+                Top.destroy()
+                self.Initial_Control()
+
+        btn_Submit = Button(Top,text="Submit",bg="#262626",fg="white",font=("Times new roman",13,"bold"),relief=RAISED,bd=3,command=Filter_value,state=DISABLED)
+        btn_Submit.place(x=330,y=87)
+
+#------------------------------end of step5
+
+#------------------------------step6
+
+        def Operate_computer(ind):
+            if ind:
+                self.Robo = 1
+                for player_index in range(2):
+                    self.Total_player.append(player_index)
+                print(self.Total_player)
+                def delay_instrctions(Time_is):
+                    if Place_ins['text'] != "":
+                        Place_ins.place_forget()
+                    if Play_Command['text'] != "":
+                        Play_Command.place_forget()
+                
+                    Place_ins['text'] = f"    Your game will start within {Time_is} sec         "
+                    Place_ins.place(x=20, y=220)
+
+                    if Time_is > 5:
+                        Play_Command['text'] = f"             Machine Play With Red and You Play With Sky Blue"
+                    elif Time_is>= 2 and Time_is<5:
+                        Play_Command['text'] = f"                       You Will Get the First Chance to play"
+                    else: 
+                        Play_Command['text'] = f"                                        Enjoy this Game"
+                    Play_Command.place(x=10, y=260)
+
+                Time_is = 5
+                Place_ins = Label(Top, text="", font=("Times new roman", 20, "bold"), fg="#FF0000")
+                Play_Command = Label(Top, text="", font=("Helvetica", 12, "bold"), fg="blue")
+
+                try:
+                    while Time_is:
+                        delay_instrctions(Time_is)
+                        Time_is-=1
+                        self.window.update()
+                        time.sleep(1)
+                    Top.destroy()
+                except:
+                    print("Force Stop Error in Operate computer")
+                self.Predict_BlockValue[1][1]['state'] = NORMAL
+            else:
+                btn_Submit['state'] = NORMAL
+                Entry_take['state'] = NORMAL
+
+        
+        btn_PC = Button(Top,text="Play With Computer",bg="#e8c1c7",fg="black",font=("Helvetica",15,"bold"),relief=RAISED,bd=3,command=lambda: Operate_computer(1), activebackground="#e3f4f1")
+        btn_PC.place(x=30,y=160)
+
+        btn_PF = Button(Top,text="Play With Friends",bg="#e8c1c7",fg="black",font=("Helvetica",15,"bold"),relief=RAISED,bd=3,command=lambda: Operate_computer(0), activebackground="#e3f4f1")
+        btn_PF.place(x=260,y=160)
+
+        Top.mainloop()
+
+#----------------------------------------end of step6
+
+#<-----------------------step7
+
+    # Get block value after prediction based on probability
+    def Prediction_Maker(self,color_indicator):
+        try:
+            if color_indicator == "red":
+                Predict_BlockValue = self.Predict_BlockValue[0]
+                if self.Robo and self.count_RoboStage < 3:
+                    self.count_RoboStage += 1
+                if self.Robo and self.count_RoboStage == 3 and self.Six_Counter < 2:
+                    Permanent_Dice_num = self.move_Red = 6
+                    self.count_RoboStage += 1
+                else:    
+                    Permanent_Dice_num = self.move_Red = randint(1, 6)
+
+            elif color_indicator == "blue":
+                Predict_BlockValue = self.Predict_BlockValue[1]
+                Permanent_Dice_num = self.move_Blue = randint(1, 6)
+                if self.Robo and Permanent_Dice_num == 6:
+                    for coin_loc in self.Position_Red_coin:
+                        if coin_loc>=40 and coin_loc<=46:
+                            Permanent_Dice_num = self.move_Blue = randint(1, 5)
+                            break
+                            
+            elif color_indicator == "yellow":
+                Predict_BlockValue = self.Predict_BlockValue[2]
+                Permanent_Dice_num = self.move_Yellow = randint(1, 6)
+
+            else:
+                Predict_BlockValue = self.Predict_BlockValue[3]
+                Permanent_Dice_num = self.move_Green = randint(1, 6)
+
+            Predict_BlockValue[1]['state'] = DISABLED
+
+            # Illusion of coin floating
+            Temp_Counter = 12
+            while Temp_Counter>0:
+                move_Temp_Counter = randint(1, 6)
+                Predict_BlockValue[0]['image'] = self.Dice_side[move_Temp_Counter - 1]
+                self.window.update()
+                time.sleep(0.1)
+                Temp_Counter-=1
+
+            print("Prediction result: ", Permanent_Dice_num)
+
+            # Permanent predicted value containing image set
+            Predict_BlockValue[0]['image'] = self.Dice_side[Permanent_Dice_num-1]
+            if self.Robo == 1 and color_indicator == "red":
+                self.window.update()
+                time.sleep(0.4)
+            self.Instructional_Button(color_indicator,Permanent_Dice_num,Predict_BlockValue)
+        except:
+            print("Force Stop Error in Prediction")
+
+#------------------------------------end of step7
