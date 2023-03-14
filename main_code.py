@@ -745,3 +745,214 @@ class Ludo_Game:
         time.sleep(0.2)
 
 #-------------------------------------end of step13
+
+#-------------------------------------step14
+
+    def State_controller_Button(self, nums_btn_List, State_Control = 1):
+        if State_Control:
+            for num_btn in nums_btn_List:
+                num_btn['state'] = NORMAL
+        else:
+            for num_btn in nums_btn_List:
+                num_btn['state'] = DISABLED
+
+
+    def Main_Controller(self, Coin_Color, Coin_num):
+        Robo_Operator = None
+
+        if  Coin_Color == "red":
+            self.State_controller_Button(self.Predict_BlockValue[0][2], 0)
+
+            if self.move_Red == 106:
+                messagebox.showwarning("Destination reached","Reached at the destination")
+
+            elif self.Position_Red_coin[int(Coin_num)-1] == -1 and self.move_Red == 6:
+                self.Start_position_RedCircle(Coin_num)
+                self.Red_coord[int(Coin_num) - 1] = 1
+
+            elif self.Position_Red_coin[int(Coin_num)-1] > -1:
+                Take_coord = self.make_board.coords(self.Red_coin[int(Coin_num)-1])
+                Red_label_X = Take_coord[0] + 10
+                Red_label_Y = Take_coord[1] + 5
+                self.Red_label[int(Coin_num) - 1].place(x=Red_label_X, y=Red_label_Y)
+
+                if self.Position_Red_coin[int(Coin_num)-1]+self.move_Red<=106:
+                    self.Position_Red_coin[int(Coin_num)-1] = self.Coin_Motion(self.Position_Red_coin[int(Coin_num) - 1],self.Red_coin[int(Coin_num)-1],self.Red_label[int(Coin_num)-1],Red_label_X,Red_label_Y,"red",self.move_Red) 
+                    if self.Robo and self.Position_Red_coin[int(Coin_num)-1] == 106 and Coin_Color == "red":
+                        self.Store_Robo.remove(int(Coin_num))
+                        print("After removing: ", self.Store_Robo)
+
+                else:
+                    if not self.Robo: 
+                            messagebox.showerror("Not possible","Sorry, not permitted")
+                    self.State_controller_Button(self.Predict_BlockValue[0][2])
+
+                    if self.Robo:
+                        Robo_Operator = "give"
+                        self.Robo_Judge(Robo_Operator)
+                    return
+
+                if  self.Position_Red_coin[int(Coin_num)-1]==22 or self.Position_Red_coin[int(Coin_num)-1]==9 or self.Position_Red_coin[int(Coin_num)-1]==48 or self.Position_Red_coin[int(Coin_num)-1]==35 or self.Position_Red_coin[int(Coin_num)-1]==14 or self.Position_Red_coin[int(Coin_num)-1]==27 or self.Position_Red_coin[int(Coin_num)-1]==40 or self.Position_Red_coin[int(Coin_num)-1]==1:
+                    pass
+                else:
+                    if self.Position_Red_coin[int(Coin_num) - 1] < 100:
+                        self.coord_overlap(self.Position_Red_coin[int(Coin_num)-1],Coin_Color, self.move_Red)
+
+                self.Red_coord[int(Coin_num)-1] = self.Position_Red_coin[int(Coin_num)-1]
+
+            else:
+                messagebox.showerror("Wrong choice","Sorry, Your coin in not permitted to travel")
+                self.State_controller_Button(self.Predict_BlockValue[0][2])
+
+                if self.Robo == 1:
+                    Robo_Operator = "give"
+                    self.Robo_Judge(Robo_Operator)
+                return
+
+            self.Predict_BlockValue[0][1]['state'] = NORMAL
+
+
+        elif Coin_Color == "green":
+            self.State_controller_Button(self.Predict_BlockValue[3][2], 0)
+
+            if self.move_Green == 106:
+                messagebox.showwarning("Destination reached","Reached at the destination")
+
+            elif self.Position_Green_coin[int(Coin_num) - 1] == -1 and self.move_Green == 6:
+                self.Start_position_GreenCircle(Coin_num)
+                self.Green_coord[int(Coin_num) - 1] = 14
+
+            elif self.Position_Green_coin[int(Coin_num) - 1] > -1:
+                Take_coord = self.make_board.coords(self.Green_coin[int(Coin_num) - 1])
+                green_start_label_x = Take_coord[0] + 10
+                green_start_label_y = Take_coord[1] + 5
+                self.Green_label[int(Coin_num) - 1].place(x=green_start_label_x, y=green_start_label_y)
+
+
+                if  self.Position_Green_coin[int(Coin_num) - 1] + self.move_Green <= 106:
+                    self.Position_Green_coin[int(Coin_num) - 1] = self.Coin_Motion(self.Position_Green_coin[int(Coin_num) - 1], self.Green_coin[int(Coin_num) - 1], self.Green_label[int(Coin_num) - 1], green_start_label_x, green_start_label_y, "green", self.move_Green)
+                else:
+                   messagebox.showerror("Not possible","No path available")
+                   self.State_controller_Button(self.Predict_BlockValue[3][2])
+                   return
+
+
+                if  self.Position_Green_coin[int(Coin_num)-1]==22 or self.Position_Green_coin[int(Coin_num)-1]==9 or self.Position_Green_coin[int(Coin_num)-1]==48 or self.Position_Green_coin[int(Coin_num)-1]==35 or self.Position_Green_coin[int(Coin_num)-1]==1 or self.Position_Green_coin[int(Coin_num)-1]==27 or self.Position_Green_coin[int(Coin_num)-1]==40 or self.Position_Green_coin[int(Coin_num)-1]==14:
+                    pass
+                else:
+                    if self.Position_Green_coin[int(Coin_num) - 1] < 100:
+                        self.coord_overlap(self.Position_Green_coin[int(Coin_num) - 1],Coin_Color, self.move_Green)
+
+                self.Green_coord[int(Coin_num) - 1] = self.Position_Green_coin[int(Coin_num) - 1]
+
+            else:
+                messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
+                self.State_controller_Button(self.Predict_BlockValue[3][2])
+                return
+
+            self.Predict_BlockValue[3][1]['state'] = NORMAL
+
+        elif Coin_Color == "yellow":
+            
+            self.State_controller_Button(self.Predict_BlockValue[2][2], 0)
+
+            if self.move_Yellow == 106:
+                messagebox.showwarning("Destination reached","Reached at the destination")
+
+            elif self.Position_Yellow_coin[int(Coin_num) - 1] == -1 and self.move_Yellow == 6:
+                self.Start_position_YellowCircle(Coin_num)
+                self.Yellow_coord[int(Coin_num) - 1] = 27
+
+            elif self.Position_Yellow_coin[int(Coin_num) - 1] > -1:
+                Take_coord = self.make_board.coords(self.Yellow_coin[int(Coin_num) - 1])
+                yellow_start_label_x = Take_coord[0] + 10
+                yellow_start_label_y = Take_coord[1] + 5
+                self.Yellow_label[int(Coin_num) - 1].place(x=yellow_start_label_x, y=yellow_start_label_y)
+
+                if  self.Position_Yellow_coin[int(Coin_num) - 1] + self.move_Yellow <= 106:
+                    self.Position_Yellow_coin[int(Coin_num) - 1] = self.Coin_Motion(self.Position_Yellow_coin[int(Coin_num) - 1], self.Yellow_coin[int(Coin_num) - 1], self.Yellow_label[int(Coin_num) - 1], yellow_start_label_x, yellow_start_label_y, "yellow", self.move_Yellow)
+                else:
+                   messagebox.showerror("Not possible","No path available")
+                   
+                   self.State_controller_Button(self.Predict_BlockValue[2][2])
+                   return
+
+                if  self.Position_Yellow_coin[int(Coin_num)-1]==22 or self.Position_Yellow_coin[int(Coin_num)-1]==9 or self.Position_Yellow_coin[int(Coin_num)-1]==48 or self.Position_Yellow_coin[int(Coin_num)-1]==35 or self.Position_Yellow_coin[int(Coin_num)-1]==1 or self.Position_Yellow_coin[int(Coin_num)-1]==14 or self.Position_Yellow_coin[int(Coin_num)-1]==40 or self.Position_Yellow_coin[int(Coin_num)-1]==27:
+                    pass
+                else:
+                    if self.Position_Yellow_coin[int(Coin_num) - 1] < 100:
+                        self.coord_overlap(self.Position_Yellow_coin[int(Coin_num) - 1],Coin_Color, self.move_Yellow)
+
+                self.Yellow_coord[int(Coin_num) - 1] = self.Position_Yellow_coin[int(Coin_num) - 1]
+
+            else:
+                messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
+                self.State_controller_Button(self.Predict_BlockValue[2][2])
+                return
+
+            self.Predict_BlockValue[2][1]['state'] = NORMAL
+
+ 
+        elif Coin_Color == "blue":
+            self.State_controller_Button(self.Predict_BlockValue[1][2], 0)   
+
+            if self.move_Red == 106:
+                messagebox.showwarning("Destination reached","Reached at the destination")
+
+            elif self.Position_Blue_coin[int(Coin_num) - 1] == -1 and self.move_Blue == 6:
+                self.Start_position_BlueCircle(Coin_num)
+                self.Blue_coord[int(Coin_num) - 1] = 40
+
+            elif self.Position_Blue_coin[int(Coin_num) - 1] > -1:
+                Take_coord = self.make_board.coords(self.Blue_coin[int(Coin_num) - 1])
+                blue_start_label_x = Take_coord[0] + 10
+                blue_start_label_y = Take_coord[1] + 5
+                self.Blue_label[int(Coin_num) - 1].place(x=blue_start_label_x, y=blue_start_label_y)
+
+                if  self.Position_Blue_coin[int(Coin_num) - 1] + self.move_Blue <= 106:
+                    self.Position_Blue_coin[int(Coin_num) - 1] = self.Coin_Motion(self.Position_Blue_coin[int(Coin_num) - 1], self.Blue_coin[int(Coin_num) - 1], self.Blue_label[int(Coin_num) - 1], blue_start_label_x, blue_start_label_y, "blue", self.move_Blue)
+                else:
+                   messagebox.showerror("Not possible","No path available")
+                   
+                   self.State_controller_Button(self.Predict_BlockValue[1][2])
+                   return
+
+                if  self.Position_Blue_coin[int(Coin_num)-1]==22 or self.Position_Blue_coin[int(Coin_num)-1]==9 or self.Position_Blue_coin[int(Coin_num)-1]==48 or self.Position_Blue_coin[int(Coin_num)-1]==35 or self.Position_Blue_coin[int(Coin_num)-1]==1 or self.Position_Blue_coin[int(Coin_num)-1]==14 or self.Position_Blue_coin[int(Coin_num)-1]==27 or self.Position_Blue_coin[int(Coin_num)-1]==40:
+                    pass
+                else:
+                    if self.Position_Blue_coin[int(Coin_num) - 1] < 100:
+                        self.coord_overlap(self.Position_Blue_coin[int(Coin_num) - 1],Coin_Color, self.move_Blue)
+
+                self.Blue_coord[int(Coin_num) - 1] = self.Position_Blue_coin[int(Coin_num) - 1]
+
+            else:
+                messagebox.showerror("Wrong choice", "Sorry, Your coin in not permitted to travel")
+                self.State_controller_Button(self.Predict_BlockValue[1][2])
+                return
+
+            self.Predict_BlockValue[1][1]['state'] = NORMAL
+
+        print(self.Red_coord)
+        print(self.Green_coord)
+        print(self.Yellow_coord)
+        print(self.Blue_coord)
+        if self.Robo == 1:
+            print("Robo Store is: ", self.Store_Robo)
+        
+        Permission_Granted = True
+
+        if  Coin_Color == "red" and self.Position_Red_coin[int(Coin_num)-1] == 106:
+            Permission_Granted = self.Check_Win_Runnerup(Coin_Color)
+        elif  Coin_Color == "green" and self.Position_Green_coin[int(Coin_num)-1] == 106:
+            Permission_Granted = self.Check_Win_Runnerup(Coin_Color)
+        elif  Coin_Color == "yellow" and self.Position_Yellow_coin[int(Coin_num)-1] == 106:
+            Permission_Granted = self.Check_Win_Runnerup(Coin_Color)
+        elif  Coin_Color == "blue" and self.Position_Blue_coin[int(Coin_num)-1] == 106:
+            Permission_Granted = self.Check_Win_Runnerup(Coin_Color)
+
+        if Permission_Granted:# if that is False, Game is over and not proceed more
+            self.Command_Maker(Robo_Operator)
+
+#-------------------------------------------end of step14
+
+
