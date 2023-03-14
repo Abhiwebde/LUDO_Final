@@ -1177,3 +1177,72 @@ class Ludo_Game:
                     self.Blue_coin[Coin_num] = remade_coin
 
 #---------------------------end of step16
+
+#----------------------------step17
+
+
+    def Traversal_Control(self,Specific_Coin,num_label,num_label_X,num_label_Y,Path_Counter,Coin_Counter,Coin_Color):
+        if Coin_Color == "red" and Coin_Counter >= 100:
+            if int(Coin_Counter)+int(Path_Counter)<=106:
+               Coin_Counter = self.Traversal_Red(Specific_Coin, num_label, num_label_X, num_label_Y, Path_Counter, Coin_Counter)
+
+        elif Coin_Color == "green" and Coin_Counter >= 100:
+            if  int(Coin_Counter) + int(Path_Counter) <= 106:
+                Coin_Counter = self.Traversal_Green(Specific_Coin, num_label, num_label_X, num_label_Y,Path_Counter,Coin_Counter)
+
+        elif Coin_Color == "yellow" and Coin_Counter >= 100:
+            if  int(Coin_Counter) + int(Path_Counter) <= 106:
+                Coin_Counter = self.Traversal_Yellow(Specific_Coin, num_label, num_label_X, num_label_Y,Path_Counter,Coin_Counter)
+
+        elif Coin_Color == "blue" and Coin_Counter >= 100:
+            if  int(Coin_Counter) + int(Path_Counter) <= 106:
+                Coin_Counter = self.Traversal_Blue(Specific_Coin, num_label, num_label_X, num_label_Y,Path_Counter,Coin_Counter)
+
+        return Coin_Counter
+
+
+    def Traversal_Red(self, Specific_Coin, num_label, num_label_X, num_label_Y, Path_Counter, Coin_Counter):
+        while Path_Counter>0:
+            Coin_Counter += 1
+            Path_Counter -= 1
+            self.make_board.move(Specific_Coin, 40, 0)
+            num_label_X+=40
+            num_label.place(x=num_label_X,y=num_label_Y)
+            self.window.update()
+            time.sleep(0.2)
+        return Coin_Counter
+
+    def Traversal_Green(self, Specific_Coin, num_label, num_label_X, num_label_Y, Path_Counter, Coin_Counter):
+        while Path_Counter > 0:
+            Coin_Counter += 1
+            Path_Counter -= 1
+            self.make_board.move(Specific_Coin, 0, 40)
+            num_label_Y += 40
+            num_label.place(x=num_label_X, y=num_label_Y)
+            self.window.update()
+            time.sleep(0.2)
+        return Coin_Counter
+
+    def Traversal_Yellow(self, Specific_Coin, num_label, num_label_X, num_label_Y,Path_Counter,Coin_Counter):
+        while Path_Counter > 0:
+            Coin_Counter += 1
+            Path_Counter -= 1
+            self.make_board.move(Specific_Coin, -40, 0)
+            num_label_X -= 40
+            num_label.place(x=num_label_X, y=num_label_Y)
+            self.window.update()
+            time.sleep(0.2)
+        return Coin_Counter
+
+    def Traversal_Blue(self, Specific_Coin, num_label, num_label_X, num_label_Y,Path_Counter,Coin_Counter):
+        while Path_Counter > 0:
+            Coin_Counter += 1
+            Path_Counter -= 1
+            self.make_board.move(Specific_Coin, 0, -40)
+            num_label_Y -= 40
+            num_label.place(x=num_label_X, y=num_label_Y)
+            self.window.update()
+            time.sleep(0.2)
+        return Coin_Counter
+
+#-----------------------------end of step17
