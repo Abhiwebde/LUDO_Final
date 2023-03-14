@@ -349,3 +349,29 @@ class Ludo_Game:
         Entry_take.focus()
 
 #-----------------------------end of step4
+
+#-----------------------------step5
+
+        def Filter_value():# Total player input value filtering
+            def input_filter_value(Coin_num):# Input value Filtering
+                try:
+                    return True if (4>=int(Coin_num)>=2) or type(Coin_num) == int else False
+                except:
+                    return False
+
+            take_Response = input_filter_value(Entry_take.get())
+            if take_Response:
+                for player_index in range(int(Entry_take.get())):
+                    self.Total_player.append(player_index)
+                print(self.Total_player)
+                self.Command_Maker()
+                Top.destroy()
+            else:
+                messagebox.showerror("Input Error", "Please input number of players between 2 and 4")
+                Top.destroy()
+                self.Initial_Control()
+
+        btn_Submit = Button(Top,text="Submit",bg="#262626",fg="white",font=("Times new roman",13,"bold"),relief=RAISED,bd=3,command=Filter_value,state=DISABLED)
+        btn_Submit.place(x=330,y=87)
+
+#------------------------------end of step5
