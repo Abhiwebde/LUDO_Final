@@ -575,3 +575,25 @@ class Ludo_Game:
             self.Robo_Judge(Robo_Operator)
 
 #-------------------------------------end of step8
+
+#------------------------------------step9
+
+    # Player Scope controller
+    def Command_Maker(self, Robo_Operator = None):
+        if  self.time_for == -1:
+            pass
+        else:
+            self.Predict_BlockValue[self.Total_player[self.time_for]][1]['state'] = DISABLED
+        if  self.time_for == len(self.Total_player)-1:
+            self.time_for = -1
+
+        self.time_for+=1
+        self.Predict_BlockValue[self.Total_player[self.time_for]][1]['state'] = NORMAL
+        
+        if self.Robo==1 and self.time_for == 0:
+            Robo_Operator = "predict"
+        if Robo_Operator:
+            self.Robo_Judge(Robo_Operator)
+
+#-----------------------------------end of step9
+
