@@ -575,3 +575,47 @@ class Ludo_Game:
             self.Robo_Judge(Robo_Operator)
 
 #-------------------------------------end of step8
+
+#------------------------------------step9
+
+    # Player Scope controller
+    def Command_Maker(self, Robo_Operator = None):
+        if  self.time_for == -1:
+            pass
+        else:
+            self.Predict_BlockValue[self.Total_player[self.time_for]][1]['state'] = DISABLED
+        if  self.time_for == len(self.Total_player)-1:
+            self.time_for = -1
+
+        self.time_for+=1
+        self.Predict_BlockValue[self.Total_player[self.time_for]][1]['state'] = NORMAL
+        
+        if self.Robo==1 and self.time_for == 0:
+            Robo_Operator = "predict"
+        if Robo_Operator:
+            self.Robo_Judge(Robo_Operator)
+
+#-----------------------------------end of step9
+
+#------------------------------------step10
+
+    def Instructional_Button_Red(self):
+        Block_Predict_Red = Label(self.make_board,image=self.Dice_side[0])
+        Block_Predict_Red.place(x=34,y=15)
+        Predict_Red = Button(self.make_board, bg="black", fg="green", relief=RAISED, bd=5, text="Predict", font=("Times new roman", 8, "bold"), command=lambda: self.Prediction_Maker("red"))
+        Predict_Red.place(x=25, y=15 + 50)
+        
+        btn_1 = Button(self.make_board,bg="#262626",fg="#00eb00",text="1",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("red",'1'), state=DISABLED, disabledforeground="red")
+        btn_1.place(x=20,y=15+100)
+        btn_2 = Button(self.make_board,bg="#262626",fg="#00eb00",text="2",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("red",'2'), state=DISABLED, disabledforeground="red")
+        btn_2.place(x=60,y=15+100)
+        btn_3 = Button(self.make_board,bg="#262626",fg="#00eb00",text="3",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("red",'3'), state=DISABLED, disabledforeground="red")
+        btn_3.place(x=20,y=15+100+40)
+        btn_4 = Button(self.make_board,bg="#262626",fg="#00eb00",text="4",font=("Times new roman",13,"bold","italic"),relief=RAISED,bd=3,command=lambda: self.Main_Controller("red",'4'), state=DISABLED, disabledforeground="red")
+        btn_4.place(x=60,y=15+100+40)
+
+        Label(self.make_board,text="Player 1",bg="#141414",fg="gold",font=("Times new roman",15,"bold")).place(x=15,y=15+140+50)
+        self.Instructional_Button_Store(Block_Predict_Red,Predict_Red,[btn_1,btn_2,btn_3,btn_4])
+
+#-------------------------------------end of step10
+
